@@ -13,11 +13,12 @@ Versão inicial da agenda em console, permitindo gerenciar tarefas com data e ho
 - **RF05** — O sistema deve permitir marcar tarefas concluídas.
 - **RF06** — O sistema deve impedir a criação de tarefas com data/horário no passado.
 - **RF07** — O sistema deve impedir a criação de tarefas sem títulos ou com títulos em branco.
+- **RF08** — O sistema deve rejeitar datas e horários em formato inválido.
 
 ## Requisitos não funcionais
 
 - **RNF01** — O sistema deve funcionar via console (linha de comando).
-- **RNF02** — O sistema deve continuar rodando caso o usuário digite algo inválido.
+- **RNF02** — O sistema deve continuar a rodar caso o usuário digite algo inválido.
 
 ## Fora do escopo desta versão
 
