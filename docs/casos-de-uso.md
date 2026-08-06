@@ -31,7 +31,7 @@
 1. O usuário escolhe a opção listar tarefas do dia no menu.
 2. O sistema solicita a data.
 3. O usuário informa a data.
-4. O sistema mostra ao usuário uma lista com as tarefas do dia ordenadas por horário.
+4. O sistema exibe a lista com as tarefas do dia ordenadas por horário, indicando as concluídas com a marcação [✓].
 
 **Fluxos de exceção:**
 - **E1:** Se a data estiver em formato inválido (ex: '32/13/2026'), o sistema informa que o formato é inválido e solicita novamente.
@@ -106,3 +106,32 @@
 - **E5:** Se a resposta às confirmações (passo 8) não for 'sim' nem 'não', o sistema informa "Digite (Sim ou Não)".
 
 **Pós-condição:** A tarefa escolhida foi removida.
+
+## UC05 — Concluir tarefa
+
+**Ator:** Usuário
+
+**Pré-condição:** O sistema está em execução e exibindo o menu principal.
+
+**Fluxo principal:**
+1. O usuário escolhe a opção concluir tarefa no menu.
+2. O sistema solicita a data.
+3. O usuário informa a data.
+4. O sistema exibe a lista numerada de tarefas do dia.
+5. O sistema solicita o número da tarefa.
+6. O usuário digita o número da tarefa.
+7. A tarefa é exibida ao usuário com a frase "Deseja marcar tarefa como concluída?" (Sim ou Não).
+8. O usuário digita sim.
+9. O sistema exibe a mensagem "Tarefa concluída!"
+
+**Fluxos alternativos:**
+- **A1:** Se no passo 8 o usuário responder 'não', o sistema exibe a mensagem "Operação cancelada!" e retorna ao menu principal.
+
+**Fluxos de exceção:**
+- **E1:** Se a data estiver em formato inválido (ex: '32/13/2026'), o sistema informa que o formato é inválido e solicita novamente.
+- **E2:** Se não existir tarefa nenhuma no dia, o sistema avisa o usuário que não existem tarefas para este dia e retorna para o menu principal.
+- **E3:** Se número digitado for inválido, o sistema informa que o formato é inválido e solicita novamente.
+- **E4:** Se número digitado não existir na lista, o sistema informa que o número informado não existe na lista e solicita novamente.
+- **E5:** Se a resposta às confirmações (passo 8) não for 'sim' nem 'não', o sistema informa "Digite (Sim ou Não)".
+
+**Pós-condição:** A tarefa escolhida foi marcada como concluída e passa a ser exibida com a marcação [✓] nas listagens.
