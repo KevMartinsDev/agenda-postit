@@ -34,3 +34,19 @@ Garante que nenhuma tarefa exista em estado inválido.
 a combinação data + horário, não cada campo isolado. Ex: alterar o
 horário para 08:00 em uma tarefa de hoje, sendo 14:00 agora, deve
 ser recusado — a data sozinha é válida, mas o momento combinado já passou.
+
+## Classe: Agenda
+
+**Papel:** Agenda faz o gerenciamento de todas as tarefas (post-its).
+
+**Atributos:**
+- tarefas : List<Tarefa> — Guarda todas as tarefas do usuário com data e horário.
+
+**Métodos:**
+- adicionar(tarefa : Tarefa) : void — Adiciona uma tarefa.
+- listarPorDia(data : LocalDate) : List<Tarefa> — Lista as tarefas do dia informado, ordenadas por horário (RF02). Se não houver tarefas na data, lança exceção (E2 dos UCs).
+- concluir(data : LocalDate, numero : int) : void — Marca uma tarefa como concluída.
+- remover(data : LocalDate, numero : int) : void — Remove uma tarefa.
+
+**Nota sobre o método editar:** a edição é feita chamando os setters da própria Tarefa,
+obtida via listarPorDia. As validações já moram nos setters (RF06/RF07).
