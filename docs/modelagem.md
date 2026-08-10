@@ -27,7 +27,7 @@ Garante que nenhuma tarefa exista em estado inválido.
 - setData(novaData : LocalDate) : void — Altera o valor da data. Valida: recusa data/horário resultante no passado (RF06).
 - setHorario(novoHorario : LocalTime) : void — Altera o valor do horário. Valida: recusa data/horário resultante no passado (RF06).
 - setDescricao(novaDescricao : String) : void — Altera o valor da descrição. Sem validação: descrição é opcional, pode até ficar vazia. Nada a proteger.
-- toString() : String — define como a tarefa é exibida nas listagens (formato com horário, título e marcação [✓] quando concluída)
+- toString() : String — define como a tarefa é exibida nas listagens (formato com horário, título e marcação [✓] quando concluída).
 - concluir() : void — marca a tarefa como concluída (UC05).
 
 **Nota sobre a validação de passado (RF06):** a verificação considera
@@ -50,3 +50,29 @@ ser recusado — a data sozinha é válida, mas o momento combinado já passou.
 
 **Nota sobre o método editar:** a edição é feita chamando os setters da própria Tarefa,
 obtida via listarPorDia. As validações já moram nos setters (RF06/RF07).
+
+## Classe: MenuConsole
+
+**Papel:** É a camada que conversa com o usuário — exibe o menu,
+lê o que ele digita, converte texto em tipos (String → LocalDate/LocalTime/int),
+mostra mensagens e chama a Agenda. Não contém regra de negócio.
+
+**Responsabilidades principais:**
+
+- Exibir menu e ler opção.
+- Ler e converter dados digitados (parse); quando a conversão falha, trata o erro de formato inválido dos UCs (E de formato) e solicita novamente.
+- Exibir listas e mensagens de erro/confirmação.
+- Repetir solicitação quando a Agenda/Tarefa recusar um valor.
+
+## Exceções
+
+| Exceção                         | Quando ocorre                                                          | Quem lança                             |
+|---------------------------------|------------------------------------------------------------------------|----------------------------------------|
+| TituloInvalidoException         | Título em branco ou só espaços (RF07)                                  | Tarefa (setTitulo/construtor)          |
+| DataNoPassadoException          | Combinação data+horário anterior ao momento atual (RF06)               | Tarefa (setData/setHorario/construtor) |
+| DiaSemTarefasException          | Não existem tarefas na data consultada (E2 dos UCs)                    | Agenda (listarPorDia)                  |
+| NumeroListaInexistenteException | Número digitado não corresponde a nenhuma tarefa da lista (E4 dos UCs) | Agenda (remover/concluir)              |
+
+**Nota:** erros de formato (ex: "32/13/2026") e respostas inválidas de sim/não não possuem exceção customizada porque são problemas de digitação/interface,
+resolvidos pelo próprio Menu no momento da conversão/leitura, sem envolver o domínio. Já as exceções da tabela representam violações de regras de negócio, detectadas
+pela Tarefa e pela Agenda.
