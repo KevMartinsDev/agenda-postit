@@ -24,7 +24,7 @@ public class Agenda {
                 .collect(Collectors.toList());
 
         if (tarefasDoDia.isEmpty()) {
-            throw new DiaSemTarefasException("Não existem tarefas para o dia " + data);
+            throw new DiaSemTarefasException("Não existem tarefas para a data informada.");
         }
 
         return tarefasDoDia;

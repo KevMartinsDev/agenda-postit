@@ -97,7 +97,7 @@ public class MenuConsole {
                 numero++;
             }
         } catch (DiaSemTarefasException e) {
-            System.out.println("Erro: " + e.getMessage());
+            System.out.println("Erro: não há tarefas para o dia " + data.format(formatadorData) + ".");
         }
     }
 
@@ -113,7 +113,9 @@ public class MenuConsole {
 
             agenda.concluir(data, numero);
             System.out.println("Tarefa concluída com sucesso!");
-        } catch (DiaSemTarefasException | NumeroListaInexistenteException e) {
+        } catch (DiaSemTarefasException e) {
+            System.out.println("Erro: não há tarefas para o dia " + data.format(formatadorData) + ".");
+        } catch (NumeroListaInexistenteException e) {
             System.out.println("Erro: " + e.getMessage());
         } catch (NumberFormatException e) {
             System.out.println("Erro: digite um número válido.");
@@ -132,7 +134,9 @@ public class MenuConsole {
 
             agenda.remover(data, numero);
             System.out.println("Tarefa removida com sucesso!");
-        } catch (DiaSemTarefasException | NumeroListaInexistenteException e) {
+        } catch (DiaSemTarefasException e) {
+            System.out.println("Erro: não há tarefas para o dia " + data.format(formatadorData) + ".");
+        } catch (NumeroListaInexistenteException e) {
             System.out.println("Erro: " + e.getMessage());
         } catch (NumberFormatException e) {
             System.out.println("Erro: digite um número válido.");
