@@ -30,24 +30,24 @@ public class Agenda {
         return tarefasDoDia;
     }
 
-    public void concluir(LocalDate data, int numero) {
+    public Tarefa buscarPorDiaNumero(LocalDate data, int numero) {
         List<Tarefa> tarefasDoDia = listarPorDia(data);
 
         if (numero < 1 || numero > tarefasDoDia.size()) {
             throw new NumeroListaInexistenteException("Número de tarefa inválido: " + numero);
         }
 
-        tarefasDoDia.get(numero - 1).concluir();
+        return tarefasDoDia.get(numero - 1);
+    }
+
+    public void concluir(LocalDate data, int numero) {
+        Tarefa tarefa = buscarPorDiaNumero(data, numero);
+        tarefa.concluir();
     }
 
     public void remover(LocalDate data, int numero) {
-        List<Tarefa> tarefasDoDia = listarPorDia(data);
-
-        if (numero < 1 || numero > tarefasDoDia.size()) {
-            throw new NumeroListaInexistenteException("Número de tarefa inválido: " + numero);
-        }
-
-        tarefas.remove(tarefasDoDia.get(numero - 1));
+        Tarefa tarefa = buscarPorDiaNumero(data, numero);
+        tarefas.remove(tarefa);
     }
 
     public List<Tarefa> obterTodas() {

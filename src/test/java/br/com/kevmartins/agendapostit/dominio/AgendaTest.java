@@ -125,4 +125,33 @@ public class AgendaTest {
         assertEquals(t1, tarefasAmanha.get(0));
         assertEquals(t2, tarefasDepois.get(0));
     }
+
+    @Test
+    public void deveBuscarTarefaPorDiaNumero() {
+        Tarefa t1 = new Tarefa("Primeira", amanha, LocalTime.of(9, 0));
+        Tarefa t2 = new Tarefa("Segunda", amanha, LocalTime.of(11, 0));
+        agenda.adicionar(t1);
+        agenda.adicionar(t2);
+
+        Tarefa encontrada = agenda.buscarPorDiaNumero(amanha, 2);
+
+        assertEquals(t2, encontrada);
+    }
+
+    @Test
+    public void deveRecusarBuscarComNumeroInvalido() {
+        Tarefa tarefa = new Tarefa("Tarefa", amanha, LocalTime.of(10, 0));
+        agenda.adicionar(tarefa);
+
+        assertThrows(NumeroListaInexistenteException.class, () -> {
+            agenda.buscarPorDiaNumero(amanha, 5);
+        });
+    }
+
+    @Test
+    public void deveRecusarBuscarEmDiaSemTarefas() {
+        assertThrows(DiaSemTarefasException.class, () -> {
+            agenda.buscarPorDiaNumero(amanha, 1);
+        });
+    }
 }
