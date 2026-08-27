@@ -175,4 +175,20 @@ public class MenuConsole {
             }
         }
     }
+
+    private boolean confirmar(String pergunta) {
+        while (true) {
+            System.out.print(pergunta + " (Sim ou Não): ");
+            String resposta = scanner.nextLine().trim().toLowerCase();
+
+            if (resposta.equals("sim") || resposta.equals("s")) {
+                return true;
+            }
+            if (resposta.equals("não") || resposta.equals("nao") || resposta.equals("n")) {
+                return false;
+            }
+
+            System.out.println("Digite (Sim ou Não).");
+        }
+    }
 }
