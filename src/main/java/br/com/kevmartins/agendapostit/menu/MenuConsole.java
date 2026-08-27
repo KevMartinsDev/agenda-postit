@@ -39,6 +39,7 @@ public class MenuConsole {
                 case 2 -> listarTarefas();
                 case 3 -> concluirTarefa();
                 case 4 -> removerTarefa();
+                case 5 -> editarTarefa();
                 case 0 -> {
                     executando = false;
                     System.out.println("Encerrando a agenda. Até logo!");
@@ -54,6 +55,7 @@ public class MenuConsole {
         System.out.println("2 - Listar tarefas do dia");
         System.out.println("3 - Concluir tarefa");
         System.out.println("4 - Remover tarefa");
+        System.out.println("5 - Editar tarefa");
         System.out.println("0 - Sair");
         System.out.print("Escolha uma opção: ");
     }
@@ -140,6 +142,113 @@ public class MenuConsole {
             System.out.println("Erro: " + e.getMessage());
         } catch (NumberFormatException e) {
             System.out.println("Erro: digite um número válido.");
+        }
+    }
+
+    private void editarTarefa() {
+        LocalDate data = lerData();
+
+        try {
+            List<Tarefa> tarefas = agenda.listarPorDia(data);
+            exibirTarefasNumeradas(tarefas, data);
+
+            System.out.print("Número da tarefa a editar: ");
+            int numero = Integer.parseInt(scanner.nextLine().trim());
+
+            Tarefa tarefa = agenda.buscarPorDiaNumero(data, numero);
+
+            System.out.println("\nTarefa selecionada:");
+            System.out.println(tarefa);
+
+            if (!confirmar("Deseja editar esta tarefa?")) {
+                System.out.println("Operação cancelada!");
+                return;
+            }
+
+            System.out.println("\nO que deseja editar?");
+            System.out.println("1 - Título");
+            System.out.println("2 - Descrição");
+            System.out.println("3 - Data e horário");
+            System.out.print("Escolha uma opção: ");
+            int campo = Integer.parseInt(scanner.nextLine().trim());
+
+            switch (campo) {
+                case 1 -> editarTitulo(tarefa);
+                case 2 -> editarDescricao(tarefa);
+                case 3 -> editarDataHorario(tarefa);
+                default -> {
+                    System.out.println("Opção inválida. Operação cancelada!");
+                    return;
+                }
+            }
+
+        } catch (DiaSemTarefasException e) {
+            System.out.println("Erro: não há tarefas para o dia " + data.format(formatadorData) + ".");
+        } catch (NumeroListaInexistenteException e) {
+            System.out.println("Erro: " + e.getMessage());
+        } catch (NumberFormatException e) {
+            System.out.println("Erro: digite um número válido.");
+        }
+    }
+
+    private void editarTitulo(Tarefa tarefa) {
+        String valorAntigo = tarefa.getTitulo();
+
+        System.out.print("Novo título: ");
+        String novoTitulo = scanner.nextLine();
+
+        try {
+            tarefa.setTitulo(novoTitulo);
+        } catch (TituloInvalidoException e) {
+            System.out.println("Erro: " + e.getMessage());
+            return;
+        }
+
+        confirmarSalvar(tarefa, () -> tarefa.setTitulo(valorAntigo));
+    }
+
+    private void editarDescricao(Tarefa tarefa) {
+        String valorAntigo = tarefa.getDescricao();
+
+        System.out.print("Nova descrição: ");
+        String novaDescricao = scanner.nextLine();
+        tarefa.setDescricao(novaDescricao);
+
+        confirmarSalvar(tarefa, () -> tarefa.setDescricao(valorAntigo));
+    }
+
+    private void editarDataHorario(Tarefa tarefa) {
+        LocalDate dataAntiga = tarefa.getData();
+        LocalTime horarioAntigo = tarefa.getHorario();
+
+        LocalDate novaData = lerData();
+        LocalTime novoHorario = lerHorario();
+
+        try {
+            tarefa.setData(novaData);
+            tarefa.setHorario(novoHorario);
+        } catch (DataNoPassadoException e) {
+            tarefa.setData(dataAntiga);
+            tarefa.setHorario(horarioAntigo);
+            System.out.println("Erro: " + e.getMessage());
+            return;
+        }
+
+        confirmarSalvar(tarefa, () -> {
+            tarefa.setData(dataAntiga);
+            tarefa.setHorario(horarioAntigo);
+        });
+    }
+
+    private void confirmarSalvar(Tarefa tarefa, Runnable desfazer) {
+        System.out.println("\nTarefa após edição:");
+        System.out.println(tarefa);
+
+        if (confirmar("Deseja salvar a edição?")) {
+            System.out.println("Tarefa atualizada!");
+        } else {
+            desfazer.run();
+            System.out.println("Operação cancelada!");
         }
     }
 
