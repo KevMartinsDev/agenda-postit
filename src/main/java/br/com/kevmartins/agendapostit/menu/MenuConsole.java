@@ -113,8 +113,17 @@ public class MenuConsole {
             System.out.print("Número da tarefa a concluir: ");
             int numero = Integer.parseInt(scanner.nextLine().trim());
 
+            Tarefa tarefa = agenda.buscarPorDiaNumero(data, numero);
+            System.out.println("\nTarefa selecionada:");
+            System.out.println(tarefa.detalhes());
+
+            if (!confirmar("Deseja marcar esta tarefa como concluída?")) {
+                System.out.println("Operação cancelada!");
+                return;
+            }
+
             agenda.concluir(data, numero);
-            System.out.println("Tarefa concluída com sucesso!");
+            System.out.println("Tarefa concluída!");
         } catch (DiaSemTarefasException e) {
             System.out.println("Erro: não há tarefas para o dia " + data.format(formatadorData) + ".");
         } catch (NumeroListaInexistenteException e) {
@@ -133,6 +142,15 @@ public class MenuConsole {
 
             System.out.print("Número da tarefa a remover: ");
             int numero = Integer.parseInt(scanner.nextLine().trim());
+
+            Tarefa tarefa = agenda.buscarPorDiaNumero(data, numero);
+            System.out.println("\nTarefa selecionada:");
+            System.out.println(tarefa.detalhes());
+
+            if (!confirmar("Deseja remover esta tarefa?")) {
+                System.out.println("Operação cancelada!");
+                return;
+            }
 
             agenda.remover(data, numero);
             System.out.println("Tarefa removida com sucesso!");
