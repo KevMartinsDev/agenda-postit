@@ -158,7 +158,7 @@ public class MenuConsole {
             Tarefa tarefa = agenda.buscarPorDiaNumero(data, numero);
 
             System.out.println("\nTarefa selecionada:");
-            System.out.println(tarefa);
+            System.out.println(tarefa.detalhes());
 
             if (!confirmar("Deseja editar esta tarefa?")) {
                 System.out.println("Operação cancelada!");
@@ -242,7 +242,7 @@ public class MenuConsole {
 
     private void confirmarSalvar(Tarefa tarefa, Runnable desfazer) {
         System.out.println("\nTarefa após edição:");
-        System.out.println(tarefa);
+        System.out.println(tarefa.detalhes());
 
         if (confirmar("Deseja salvar a edição?")) {
             System.out.println("Tarefa atualizada!");

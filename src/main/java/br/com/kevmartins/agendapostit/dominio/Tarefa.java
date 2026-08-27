@@ -89,4 +89,18 @@ public class Tarefa {
         String marca = concluido ? "[✓]" : "[ ]";
         return String.format("%s %02d:%02d - %s", marca, horario.getHour(), horario.getMinute(), titulo);
     }
+
+    public String detalhes() {
+        String status = concluido ? "Concluída" : "Pendente";
+        String desc = descricao.isBlank() ? "(sem descrição)" : descricao;
+
+        return String.format(
+                "Título: %s%nData: %02d/%02d/%d%nHorário: %02d:%02d%nDescrição: %s%nStatus: %s",
+                titulo,
+                data.getDayOfMonth(), data.getMonthValue(), data.getYear(),
+                horario.getHour(), horario.getMinute(),
+                desc,
+                status
+        );
+    }
 }
