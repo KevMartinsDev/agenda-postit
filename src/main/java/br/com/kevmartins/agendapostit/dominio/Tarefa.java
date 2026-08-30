@@ -10,6 +10,7 @@ public class Tarefa {
     private String descricao;
     private LocalTime horario;
     private boolean concluido;
+    private Long id;
 
     public Tarefa(String titulo, LocalDate data, LocalTime horario) {
         this(titulo, data, horario, "");
@@ -55,6 +56,14 @@ public class Tarefa {
 
     public LocalTime getHorario() {
         return horario;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public boolean isConcluido() {

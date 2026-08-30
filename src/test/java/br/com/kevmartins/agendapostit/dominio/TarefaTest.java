@@ -129,4 +129,16 @@ public class TarefaTest {
         esperado = "[✓] 09:05 - Comprar pão";
         assertEquals(esperado, tarefa.toString());
     }
+
+    @Test
+    public void idDeveComecarNuloEPoderSerDefinido() {
+        LocalDate amanha = LocalDate.now().plusDays(1);
+        LocalTime horario = LocalTime.of(10, 30);
+        Tarefa tarefa = new Tarefa("Tarefa", amanha, horario);
+
+        assertNull(tarefa.getId());
+
+        tarefa.setId(1L);
+        assertEquals(1L, tarefa.getId());
+    }
 }
