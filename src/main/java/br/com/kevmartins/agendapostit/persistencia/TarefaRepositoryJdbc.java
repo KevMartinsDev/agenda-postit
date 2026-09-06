@@ -90,9 +90,37 @@ public class TarefaRepositoryJdbc implements TarefaRepository {
 
     @Override
     public void atualizar(Tarefa tarefa) {
+        String sql = "UPDATE tarefas SET titulo = ?, data = ?, horario = ?, descricao = ?, concluido = ? WHERE id = ?";
+
+        try (Connection conexao = abrirConexao();
+             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+
+            stmt.setString(1, tarefa.getTitulo());
+            stmt.setObject(2, tarefa.getData());
+            stmt.setObject(3, tarefa.getHorario());
+            stmt.setString(4, tarefa.getDescricao());
+            stmt.setBoolean(5, tarefa.isConcluido());
+            stmt.setLong(6, tarefa.getId());
+
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao atualizar tarefa no banco.", e);
+        }
     }
 
     @Override
     public void remover(Long id) {
+        String sql = "DELETE FROM tarefas WHERE id = ?";
+
+        try (Connection conexao = abrirConexao();
+             PreparedStatement stmt = conexao.prepareStatement(sql)) {
+
+            stmt.setLong(1, id);
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao remover tarefa no banco.", e);
+        }
     }
 }

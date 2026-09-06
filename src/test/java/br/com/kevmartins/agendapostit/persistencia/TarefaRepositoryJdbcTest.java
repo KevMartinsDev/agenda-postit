@@ -69,14 +69,40 @@ public class TarefaRepositoryJdbcTest {
         List<Tarefa> tarefas = repository.buscarTodas();
 
         assertEquals(1, tarefas.size());
-        assertEquals("Estudar Testcontainers", tarefas.get(0).getTitulo());
-        assertEquals("Revisar isolamento", tarefas.get(0).getDescricao());
+        assertEquals("Estudar Testcontainers", tarefas.getFirst().getTitulo());
+        assertEquals("Revisar isolamento", tarefas.getFirst().getDescricao());
     }
 
     @Test
     public void deveComecarComBancoVazio() {
         List<Tarefa> tarefas = repository.buscarTodas();
 
+        assertTrue(tarefas.isEmpty());
+    }
+
+    @Test
+    public void deveAtualizarTarefa() {
+        Tarefa tarefa = new Tarefa("Título original", LocalDate.now().plusDays(1), LocalTime.of(10, 0));
+        Tarefa salva = repository.salvar(tarefa);
+
+        salva.setTitulo("Título alterado");
+        salva.concluir();
+        repository.atualizar(salva);
+
+        List<Tarefa> tarefas = repository.buscarTodas();
+        assertEquals(1, tarefas.size());
+        assertEquals("Título alterado", tarefas.getFirst().getTitulo());
+        assertTrue(tarefas.getFirst().isConcluido());
+    }
+
+    @Test
+    public void deveRemoverTarefa() {
+        Tarefa tarefa = new Tarefa("Para remover", LocalDate.now().plusDays(1), LocalTime.of(10, 0));
+        Tarefa salva = repository.salvar(tarefa);
+
+        repository.remover(salva.getId());
+
+        List<Tarefa> tarefas = repository.buscarTodas();
         assertTrue(tarefas.isEmpty());
     }
 }
