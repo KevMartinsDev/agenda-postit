@@ -1,27 +1,28 @@
 package br.com.kevmartins.agendapostit.dominio;
 
+import br.com.kevmartins.agendapostit.persistencia.TarefaRepository;
+
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Agenda {
-    private List<Tarefa> tarefas;
 
-    public Agenda() {
-        this.tarefas = new ArrayList<>();
+    private final TarefaRepository repositorio;
+
+    public Agenda(TarefaRepository repositorio) {
+        this.repositorio = repositorio;
     }
 
     public void adicionar(Tarefa tarefa) {
-        tarefas.add(tarefa);
+        repositorio.salvar(tarefa);
     }
 
     public List<Tarefa> listarPorDia(LocalDate data) {
-        List<Tarefa> tarefasDoDia = tarefas.stream()
+        List<Tarefa> tarefasDoDia = repositorio.buscarTodas().stream()
                 .filter(t -> t.getData().equals(data))
                 .sorted(Comparator.comparing(Tarefa::getHorario))
-                .collect(Collectors.toList());
+                .toList();
 
         if (tarefasDoDia.isEmpty()) {
             throw new DiaSemTarefasException("Não existem tarefas para a data informada.");
@@ -43,14 +44,11 @@ public class Agenda {
     public void concluir(LocalDate data, int numero) {
         Tarefa tarefa = buscarPorDiaNumero(data, numero);
         tarefa.concluir();
+        repositorio.atualizar(tarefa);
     }
 
     public void remover(LocalDate data, int numero) {
         Tarefa tarefa = buscarPorDiaNumero(data, numero);
-        tarefas.remove(tarefa);
-    }
-
-    public List<Tarefa> obterTodas() {
-        return new ArrayList<>(tarefas);
+        repositorio.remover(tarefa.getId());
     }
 }

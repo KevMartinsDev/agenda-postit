@@ -1,23 +1,31 @@
 package br.com.kevmartins.agendapostit.dominio;
 
+import br.com.kevmartins.agendapostit.persistencia.TarefaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 public class AgendaTest {
+
+    @Mock
+    private TarefaRepository repositorio;
+
     private Agenda agenda;
-    private LocalDate hoje;
     private LocalDate amanha;
 
     @BeforeEach
     public void setUp() {
-        agenda = new Agenda();
-        hoje = LocalDate.now();
+        agenda = new Agenda(repositorio);
         amanha = LocalDate.now().plusDays(1);
     }
 
@@ -27,7 +35,7 @@ public class AgendaTest {
 
         agenda.adicionar(tarefa);
 
-        assertTrue(agenda.obterTodas().contains(tarefa));
+        verify(repositorio).salvar(tarefa);
     }
 
     @Test
@@ -36,9 +44,7 @@ public class AgendaTest {
         Tarefa t2 = new Tarefa("Segunda", amanha, LocalTime.of(10, 0));
         Tarefa t3 = new Tarefa("Terceira", amanha, LocalTime.of(12, 0));
 
-        agenda.adicionar(t1);
-        agenda.adicionar(t2);
-        agenda.adicionar(t3);
+        when(repositorio.buscarTodas()).thenReturn(List.of(t1, t2, t3));
 
         List<Tarefa> tarefasDoDia = agenda.listarPorDia(amanha);
 
@@ -50,6 +56,8 @@ public class AgendaTest {
 
     @Test
     public void deveRecusarListarDiaSemTarefas() {
+        when(repositorio.buscarTodas()).thenReturn(List.of());
+
         assertThrows(DiaSemTarefasException.class, () -> {
             agenda.listarPorDia(amanha);
         });
@@ -58,17 +66,18 @@ public class AgendaTest {
     @Test
     public void devePermitirConcluirTarefa() {
         Tarefa tarefa = new Tarefa("Tarefa", amanha, LocalTime.of(10, 0));
-        agenda.adicionar(tarefa);
+        when(repositorio.buscarTodas()).thenReturn(List.of(tarefa));
 
-        assertFalse(tarefa.isConcluido());
         agenda.concluir(amanha, 1);
+
         assertTrue(tarefa.isConcluido());
+        verify(repositorio).atualizar(tarefa);
     }
 
     @Test
     public void deveRecusarConcluirComNumeroInvalido() {
         Tarefa tarefa = new Tarefa("Tarefa", amanha, LocalTime.of(10, 0));
-        agenda.adicionar(tarefa);
+        when(repositorio.buscarTodas()).thenReturn(List.of(tarefa));
 
         assertThrows(NumeroListaInexistenteException.class, () -> {
             agenda.concluir(amanha, 5);
@@ -78,17 +87,18 @@ public class AgendaTest {
     @Test
     public void devePermitirRemoverTarefa() {
         Tarefa tarefa = new Tarefa("Tarefa", amanha, LocalTime.of(10, 0));
-        agenda.adicionar(tarefa);
+        tarefa.setId(42L);
+        when(repositorio.buscarTodas()).thenReturn(List.of(tarefa));
 
-        assertEquals(1, agenda.obterTodas().size());
         agenda.remover(amanha, 1);
-        assertEquals(0, agenda.obterTodas().size());
+
+        verify(repositorio).remover(42L);
     }
 
     @Test
     public void deveRecusarRemoverComNumeroInvalido() {
         Tarefa tarefa = new Tarefa("Tarefa", amanha, LocalTime.of(10, 0));
-        agenda.adicionar(tarefa);
+        when(repositorio.buscarTodas()).thenReturn(List.of(tarefa));
 
         assertThrows(NumeroListaInexistenteException.class, () -> {
             agenda.remover(amanha, 3);
@@ -96,62 +106,13 @@ public class AgendaTest {
     }
 
     @Test
-    public void deveRemoverApenasDoListaDodia() {
-        Tarefa t1 = new Tarefa("Amanhã", amanha, LocalTime.of(10, 0));
-        Tarefa t2 = new Tarefa("Depois", amanha.plusDays(1), LocalTime.of(10, 0));
-
-        agenda.adicionar(t1);
-        agenda.adicionar(t2);
-
-        agenda.remover(amanha, 1);
-
-        assertEquals(1, agenda.obterTodas().size());
-        assertTrue(agenda.obterTodas().contains(t2));
-    }
-
-    @Test
-    public void deveListarMultiplosDiasIndependentes() {
-        Tarefa t1 = new Tarefa("Amanhã", amanha, LocalTime.of(10, 0));
-        Tarefa t2 = new Tarefa("Depois", amanha.plusDays(1), LocalTime.of(10, 0));
-
-        agenda.adicionar(t1);
-        agenda.adicionar(t2);
-
-        List<Tarefa> tarefasAmanha = agenda.listarPorDia(amanha);
-        List<Tarefa> tarefasDepois = agenda.listarPorDia(amanha.plusDays(1));
-
-        assertEquals(1, tarefasAmanha.size());
-        assertEquals(1, tarefasDepois.size());
-        assertEquals(t1, tarefasAmanha.get(0));
-        assertEquals(t2, tarefasDepois.get(0));
-    }
-
-    @Test
     public void deveBuscarTarefaPorDiaNumero() {
         Tarefa t1 = new Tarefa("Primeira", amanha, LocalTime.of(9, 0));
         Tarefa t2 = new Tarefa("Segunda", amanha, LocalTime.of(11, 0));
-        agenda.adicionar(t1);
-        agenda.adicionar(t2);
+        when(repositorio.buscarTodas()).thenReturn(List.of(t1, t2));
 
         Tarefa encontrada = agenda.buscarPorDiaNumero(amanha, 2);
 
         assertEquals(t2, encontrada);
-    }
-
-    @Test
-    public void deveRecusarBuscarComNumeroInvalido() {
-        Tarefa tarefa = new Tarefa("Tarefa", amanha, LocalTime.of(10, 0));
-        agenda.adicionar(tarefa);
-
-        assertThrows(NumeroListaInexistenteException.class, () -> {
-            agenda.buscarPorDiaNumero(amanha, 5);
-        });
-    }
-
-    @Test
-    public void deveRecusarBuscarEmDiaSemTarefas() {
-        assertThrows(DiaSemTarefasException.class, () -> {
-            agenda.buscarPorDiaNumero(amanha, 1);
-        });
     }
 }

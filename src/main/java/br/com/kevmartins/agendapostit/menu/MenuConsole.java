@@ -20,8 +20,8 @@ public class MenuConsole {
     private final DateTimeFormatter formatadorData;
     private final DateTimeFormatter formatadorHora;
 
-    public MenuConsole() {
-        this.agenda = new Agenda();
+    public MenuConsole(Agenda agenda) {
+        this.agenda = agenda;
         this.scanner = new Scanner(System.in);
         this.formatadorData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         this.formatadorHora = DateTimeFormatter.ofPattern("HH:mm");
