@@ -6,6 +6,7 @@ import br.com.kevmartins.agendapostit.dominio.DiaSemTarefasException;
 import br.com.kevmartins.agendapostit.dominio.NumeroListaInexistenteException;
 import br.com.kevmartins.agendapostit.dominio.Tarefa;
 import br.com.kevmartins.agendapostit.dominio.TituloInvalidoException;
+import br.com.kevmartins.agendapostit.persistencia.RepositorioException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -34,17 +35,22 @@ public class MenuConsole {
             exibirMenu();
             int opcao = lerOpcao();
 
-            switch (opcao) {
-                case 1 -> adicionarTarefa();
-                case 2 -> listarTarefas();
-                case 3 -> concluirTarefa();
-                case 4 -> removerTarefa();
-                case 5 -> editarTarefa();
-                case 0 -> {
-                    executando = false;
-                    System.out.println("Encerrando a agenda. Até logo!");
+            try {
+                switch (opcao) {
+                    case 1 -> adicionarTarefa();
+                    case 2 -> listarTarefas();
+                    case 3 -> concluirTarefa();
+                    case 4 -> removerTarefa();
+                    case 5 -> editarTarefa();
+                    case 0 -> {
+                        executando = false;
+                        System.out.println("Encerrando a agenda. Até logo!");
+                    }
+                    default -> System.out.println("Opção inválida. Tente novamente.");
                 }
-                default -> System.out.println("Opção inválida. Tente novamente.");
+            } catch (RepositorioException e) {
+                System.out.println("\nErro de acesso ao banco de dados: " + e.getMessage());
+                System.out.println("Verifique se o banco está em execução e tente novamente.");
             }
         }
     }

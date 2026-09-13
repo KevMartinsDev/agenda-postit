@@ -52,7 +52,7 @@ public class TarefaRepositoryJdbc implements TarefaRepository {
             return tarefa;
 
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao salvar tarefa no banco.", e);
+            throw new RepositorioException("Erro ao salvar tarefa no banco.", e);
         }
     }
 
@@ -79,7 +79,7 @@ public class TarefaRepositoryJdbc implements TarefaRepository {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao buscar tarefas no banco.", e);
+            throw new RepositorioException("Erro ao buscar tarefas no banco.", e);
         }
 
         return tarefas;
@@ -102,7 +102,7 @@ public class TarefaRepositoryJdbc implements TarefaRepository {
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao atualizar tarefa no banco.", e);
+            throw new RepositorioException("Erro ao atualizar tarefa no banco.", e);
         }
     }
 
@@ -117,7 +117,7 @@ public class TarefaRepositoryJdbc implements TarefaRepository {
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao remover tarefa no banco.", e);
+            throw new RepositorioException("Erro ao remover tarefa no banco.", e);
         }
     }
 }

@@ -11,7 +11,7 @@ public class ConexaoBanco {
     private static final String URL_PADRAO = "jdbc:postgresql://localhost:5432/agenda";
     private static final Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
 
-    public static Connection obterConexao() throws SQLException {
+    public static Connection obterConexao() {
         String usuario = dotenv.get("POSTGRES_USER");
         String senha = dotenv.get("POSTGRES_PASSWORD");
 
@@ -24,7 +24,11 @@ public class ConexaoBanco {
         return obterConexao(URL_PADRAO, usuario, senha);
     }
 
-    public static Connection obterConexao(String url, String usuario, String senha) throws SQLException {
-        return DriverManager.getConnection(url, usuario, senha);
+    public static Connection obterConexao(String url, String usuario, String senha) {
+        try {
+            return DriverManager.getConnection(url, usuario, senha);
+        } catch (SQLException e) {
+            throw new RepositorioException("Não foi possível conectar ao banco de dados.", e);
+        }
     }
 }
