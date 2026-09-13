@@ -242,15 +242,8 @@ public class MenuConsole {
         LocalDate novaData = lerData();
         LocalTime novoHorario = lerHorario();
 
-        try {
-            tarefa.setData(novaData);
-            tarefa.setHorario(novoHorario);
-        } catch (DataNoPassadoException e) {
-            tarefa.setData(dataAntiga);
-            tarefa.setHorario(horarioAntigo);
-            System.out.println("Erro: " + e.getMessage());
-            return;
-        }
+        tarefa.setData(novaData);
+        tarefa.setHorario(novoHorario);
 
         confirmarSalvar(tarefa, () -> {
             tarefa.setData(dataAntiga);
@@ -263,6 +256,7 @@ public class MenuConsole {
         System.out.println(tarefa.detalhes());
 
         if (confirmar("Deseja salvar a edição?")) {
+            agenda.atualizar(tarefa);
             System.out.println("Tarefa atualizada!");
         } else {
             desfazer.run();

@@ -27,6 +27,21 @@ public class Tarefa {
         this.concluido = false;
     }
 
+    private Tarefa(Long id, String titulo, LocalDate data, LocalTime horario, String descricao, boolean concluido) {
+        validarTitulo(titulo);
+
+        this.id = id;
+        this.titulo = titulo;
+        this.data = data;
+        this.horario = horario;
+        this.descricao = descricao != null ? descricao : "";
+        this.concluido = concluido;
+    }
+
+    public static Tarefa reconstruir(Long id, String titulo, LocalDate data, LocalTime horario, String descricao, boolean concluido) {
+        return new Tarefa(id, titulo, data, horario, descricao, concluido);
+    }
+
     private void validarTitulo(String titulo) {
         if (titulo == null || titulo.isBlank()) {
             throw new TituloInvalidoException("Título não pode estar vazio ou conter apenas espaços");
@@ -76,12 +91,10 @@ public class Tarefa {
     }
 
     public void setData(LocalDate novaData) {
-        validarDataHorario(novaData, this.horario);
         this.data = novaData;
     }
 
     public void setHorario(LocalTime novoHorario) {
-        validarDataHorario(this.data, novoHorario);
         this.horario = novoHorario;
     }
 

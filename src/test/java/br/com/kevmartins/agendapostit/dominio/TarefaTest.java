@@ -141,4 +141,24 @@ public class TarefaTest {
         tarefa.setId(1L);
         assertEquals(1L, tarefa.getId());
     }
+
+    @Test
+    public void setDataDeveAceitarDataNoPassado() {
+        Tarefa tarefa = new Tarefa("Tarefa", LocalDate.now().plusDays(1), LocalTime.of(10, 0));
+
+        LocalDate ontem = LocalDate.now().minusDays(1);
+        tarefa.setData(ontem);
+
+        assertEquals(ontem, tarefa.getData());
+    }
+
+    @Test
+    public void setHorarioDeveAceitarHorarioNoPassado() {
+        Tarefa tarefa = new Tarefa("Tarefa", LocalDate.now(), LocalTime.now().plusHours(2));
+
+        LocalTime horaPassada = LocalTime.now().minusHours(1);
+        tarefa.setHorario(horaPassada);
+
+        assertEquals(horaPassada, tarefa.getHorario());
+    }
 }

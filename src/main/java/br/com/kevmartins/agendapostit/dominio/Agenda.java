@@ -47,6 +47,10 @@ public class Agenda {
         repositorio.atualizar(tarefa);
     }
 
+    public void atualizar(Tarefa tarefa) {
+        repositorio.atualizar(tarefa);
+    }
+
     public void remover(LocalDate data, int numero) {
         Tarefa tarefa = buscarPorDiaNumero(data, numero);
         repositorio.remover(tarefa.getId());

@@ -66,17 +66,14 @@ public class TarefaRepositoryJdbc implements TarefaRepository {
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                Tarefa tarefa = new Tarefa(
+                Tarefa tarefa = Tarefa.reconstruir(
+                        rs.getLong("id"),
                         rs.getString("titulo"),
                         rs.getObject("data", LocalDate.class),
                         rs.getObject("horario", LocalTime.class),
-                        rs.getString("descricao")
+                        rs.getString("descricao"),
+                        rs.getBoolean("concluido")
                 );
-                tarefa.setId(rs.getLong("id"));
-
-                if (rs.getBoolean("concluido")) {
-                    tarefa.concluir();
-                }
 
                 tarefas.add(tarefa);
             }
