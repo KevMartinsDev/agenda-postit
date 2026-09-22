@@ -1,19 +1,21 @@
 package br.com.kevmartins.agendapostit;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class AppGrafica extends Application {
 
     @Override
-    public void start(Stage palco) {
-        Label mensagem = new Label("Agenda Post-it — interface gráfica");
-
-        StackPane raiz = new StackPane();
-        raiz.getChildren().add(mensagem);
+    public void start(Stage palco) throws IOException {
+        FXMLLoader carregador = new FXMLLoader(
+                getClass().getResource("/br/com/kevmartins/agendapostit/tela-teste.fxml")
+        );
+        Parent raiz = carregador.load();
 
         Scene cena = new Scene(raiz, 600, 400);
 
