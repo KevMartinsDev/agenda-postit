@@ -13,7 +13,7 @@ public class AppGrafica extends Application {
     @Override
     public void start(Stage palco) throws IOException {
         FXMLLoader carregador = new FXMLLoader(
-                getClass().getResource("/br/com/kevmartins/agendapostit/tela-teste.fxml")
+                getClass().getResource("/br/com/kevmartins/agendapostit/tela-lista.fxml")
         );
         Parent raiz = carregador.load();
 
