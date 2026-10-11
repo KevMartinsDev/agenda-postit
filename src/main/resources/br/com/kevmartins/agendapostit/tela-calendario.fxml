@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="12.0" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="br.com.kevmartins.agendapostit.gui.TelaCalendarioController">
+
+    <padding>
+        <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+    </padding>
+
+    <HBox spacing="12.0" alignment="CENTER">
+        <Button text="&lt;" onAction="#mesAnterior"/>
+        <Label fx:id="rotuloMes" text="Mês"/>
+        <Button text="&gt;" onAction="#mesSeguinte"/>
+    </HBox>
+
+    <GridPane fx:id="gradeDias" hgap="4.0" vgap="4.0"/>
+
+</VBox>

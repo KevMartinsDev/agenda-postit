@@ -13,11 +13,11 @@ public class AppGrafica extends Application {
     @Override
     public void start(Stage palco) throws IOException {
         FXMLLoader carregador = new FXMLLoader(
-                getClass().getResource("/br/com/kevmartins/agendapostit/tela-lista.fxml")
+                getClass().getResource("/br/com/kevmartins/agendapostit/tela-calendario.fxml")
         );
         Parent raiz = carregador.load();
 
-        Scene cena = new Scene(raiz, 600, 400);
+        Scene cena = new Scene(raiz, 520, 480);
 
         palco.setTitle("Agenda Post-it");
         palco.setScene(cena);
