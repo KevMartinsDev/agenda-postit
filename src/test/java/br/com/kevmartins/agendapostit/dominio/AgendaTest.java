@@ -11,6 +11,9 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+import java.time.YearMonth;
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -114,5 +117,37 @@ public class AgendaTest {
         Tarefa encontrada = agenda.buscarPorDiaNumero(amanha, 2);
 
         assertEquals(t2, encontrada);
+    }
+
+    @Test
+    public void deveRetornarDiasComTarefaNoMes() {
+        LocalDate dia10 = LocalDate.of(2026, 11, 10);
+        LocalDate dia20 = LocalDate.of(2026, 11, 20);
+
+        Tarefa t1 = new Tarefa("A", dia10, LocalTime.of(9, 0));
+        Tarefa t2 = new Tarefa("B", dia10, LocalTime.of(14, 0));
+        Tarefa t3 = new Tarefa("C", dia20, LocalTime.of(10, 0));
+        when(repositorio.buscarTodas()).thenReturn(List.of(t1, t2, t3));
+
+        Set<LocalDate> dias = agenda.diasComTarefa(YearMonth.of(2026, 11));
+
+        assertEquals(2, dias.size());
+        assertTrue(dias.contains(dia10));
+        assertTrue(dias.contains(dia20));
+    }
+
+    @Test
+    public void deveIgnorarTarefasDeOutrosMeses() {
+        LocalDate novembro = LocalDate.of(2026, 11, 10);
+        LocalDate dezembro = LocalDate.of(2026, 12, 5);
+
+        Tarefa t1 = new Tarefa("A", novembro, LocalTime.of(9, 0));
+        Tarefa t2 = new Tarefa("B", dezembro, LocalTime.of(10, 0));
+        when(repositorio.buscarTodas()).thenReturn(List.of(t1, t2));
+
+        Set<LocalDate> dias = agenda.diasComTarefa(YearMonth.of(2026, 11));
+
+        assertEquals(1, dias.size());
+        assertTrue(dias.contains(novembro));
     }
 }

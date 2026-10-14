@@ -54,11 +54,11 @@ public class TarefaTest {
 
     @Test
     public void deveRecusarHorarioNoPassado() {
-        LocalDate hoje = LocalDate.now();
-        LocalTime umaHoraAtras = LocalTime.now().minusHours(1);
+        LocalDate ontem = LocalDate.now().minusDays(1);
+        LocalTime horario = LocalTime.of(23, 59);
 
         assertThrows(DataNoPassadoException.class, () -> {
-            new Tarefa("Tarefa atrasada", hoje, umaHoraAtras);
+            new Tarefa("Tarefa atrasada", ontem, horario);
         });
     }
 
@@ -154,11 +154,10 @@ public class TarefaTest {
 
     @Test
     public void setHorarioDeveAceitarHorarioNoPassado() {
-        Tarefa tarefa = new Tarefa("Tarefa", LocalDate.now(), LocalTime.now().plusHours(2));
+        Tarefa tarefa = new Tarefa("Tarefa", LocalDate.now().plusDays(1), LocalTime.of(10, 0));
 
-        LocalTime horaPassada = LocalTime.now().minusHours(1);
-        tarefa.setHorario(horaPassada);
+        tarefa.setHorario(LocalTime.of(8, 0));
 
-        assertEquals(horaPassada, tarefa.getHorario());
+        assertEquals(LocalTime.of(8, 0), tarefa.getHorario());
     }
 }
