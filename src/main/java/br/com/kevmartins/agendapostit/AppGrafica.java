@@ -17,7 +17,7 @@ public class AppGrafica extends Application {
         );
         Parent raiz = carregador.load();
 
-        Scene cena = new Scene(raiz, 520, 480);
+        Scene cena = new Scene(raiz, 800, 480);
 
         palco.setTitle("Agenda Post-it");
         palco.setScene(cena);
