@@ -28,6 +28,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 public class TelaCalendarioController {
 
@@ -57,6 +58,7 @@ public class TelaCalendarioController {
 
     public void setAgenda(Agenda agenda) {
         this.agenda = agenda;
+        desenharCalendario();
     }
 
     private void desenharCalendario() {
@@ -85,6 +87,10 @@ public class TelaCalendarioController {
         LocalDate primeiroDia = mesAtual.atDay(1);
         int colunaInicial = primeiroDia.getDayOfWeek().getValue() % 7;
 
+        Set<LocalDate> diasComTarefa = (agenda != null)
+                ? agenda.diasComTarefa(mesAtual)
+                : Set.of();
+
         int linha = 1;
         int coluna = colunaInicial;
 
@@ -94,6 +100,10 @@ public class TelaCalendarioController {
             Button botaoDia = new Button(String.valueOf(dia));
             botaoDia.setPrefSize(60, 50);
             botaoDia.setOnAction(evento -> aoClicarDia(dataDoDia));
+
+            if (diasComTarefa.contains(dataDoDia)) {
+                botaoDia.setStyle("-fx-background-color: #b3d9ff;");
+            }
 
             gradeDias.add(botaoDia, coluna, linha);
 
