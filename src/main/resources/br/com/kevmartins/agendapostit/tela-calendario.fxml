@@ -23,6 +23,7 @@
             <Button text="&gt;" onAction="#mesSeguinte"/>
         </HBox>
         <GridPane fx:id="gradeDias" hgap="4.0" vgap="4.0"/>
+        <Button text="Nova tarefa" onAction="#aoClicarNovaTarefa"/>
     </VBox>
 
     <VBox spacing="12.0" prefWidth="260.0">

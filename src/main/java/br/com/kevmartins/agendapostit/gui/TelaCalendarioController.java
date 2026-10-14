@@ -13,6 +13,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import java.io.IOException;
+
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
@@ -36,6 +43,7 @@ public class TelaCalendarioController {
 
     private YearMonth mesAtual;
     private Agenda agenda;
+    private LocalDate dataSelecionada;
 
     private final DateTimeFormatter formatadorData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
@@ -96,6 +104,7 @@ public class TelaCalendarioController {
     }
 
     private void aoClicarDia(LocalDate data) {
+        dataSelecionada = data;
         rotuloDiaSelecionado.setText("Tarefas de " + data.format(formatadorData));
 
         try {
@@ -127,5 +136,30 @@ public class TelaCalendarioController {
     private void mesSeguinte() {
         mesAtual = mesAtual.plusMonths(1);
         desenharCalendario();
+    }
+
+    @FXML
+    private void aoClicarNovaTarefa() {
+        try {
+            FXMLLoader carregador = new FXMLLoader(
+                    getClass().getResource("/br/com/kevmartins/agendapostit/tela-formulario.fxml")
+            );
+            Parent raiz = carregador.load();
+
+            TelaFormularioController controllerForm = carregador.getController();
+            controllerForm.setAgenda(agenda);
+
+            Stage janelaForm = new Stage();
+            janelaForm.setTitle("Nova tarefa");
+            janelaForm.setScene(new Scene(raiz));
+            janelaForm.initModality(Modality.APPLICATION_MODAL);
+            janelaForm.showAndWait();
+
+            if (controllerForm.isSalvou() && dataSelecionada != null) {
+                aoClicarDia(dataSelecionada);
+            }
+        } catch (IOException e) {
+            mostrarErro("Não foi possível abrir o formulário.");
+        }
     }
 }
