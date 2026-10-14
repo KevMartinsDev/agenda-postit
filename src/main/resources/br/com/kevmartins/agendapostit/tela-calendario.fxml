@@ -29,6 +29,11 @@
     <VBox spacing="12.0" prefWidth="260.0">
         <Label fx:id="rotuloDiaSelecionado" text="Selecione um dia"/>
         <ListView fx:id="listaTarefas"/>
+        <HBox spacing="8.0">
+            <Button text="Concluir" onAction="#aoConcluir"/>
+            <Button text="Editar" onAction="#aoEditar"/>
+            <Button text="Remover" onAction="#aoRemover"/>
+        </HBox>
     </VBox>
 
 </HBox>

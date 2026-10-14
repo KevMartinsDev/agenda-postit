@@ -19,6 +19,8 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.IOException;
+import javafx.scene.control.ButtonType;
+import java.util.Optional;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -151,6 +153,84 @@ public class TelaCalendarioController {
 
             Stage janelaForm = new Stage();
             janelaForm.setTitle("Nova tarefa");
+            janelaForm.setScene(new Scene(raiz));
+            janelaForm.initModality(Modality.APPLICATION_MODAL);
+            janelaForm.showAndWait();
+
+            if (controllerForm.isSalvou() && dataSelecionada != null) {
+                aoClicarDia(dataSelecionada);
+            }
+        } catch (IOException e) {
+            mostrarErro("Não foi possível abrir o formulário.");
+        }
+    }
+
+    @FXML
+    private void aoConcluir() {
+        Tarefa selecionada = listaTarefas.getSelectionModel().getSelectedItem();
+
+        if (selecionada == null) {
+            mostrarErro("Selecione uma tarefa na lista.");
+            return;
+        }
+
+        try {
+            int numero = listaTarefas.getSelectionModel().getSelectedIndex() + 1;
+            agenda.concluir(dataSelecionada, numero);
+            aoClicarDia(dataSelecionada);
+        } catch (RepositorioException e) {
+            mostrarErro("Erro de acesso ao banco de dados. Verifique se o banco está em execução.");
+        }
+    }
+
+    @FXML
+    private void aoRemover() {
+        Tarefa selecionada = listaTarefas.getSelectionModel().getSelectedItem();
+
+        if (selecionada == null) {
+            mostrarErro("Selecione uma tarefa na lista.");
+            return;
+        }
+
+        Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmacao.setTitle("Remover tarefa");
+        confirmacao.setHeaderText(null);
+        confirmacao.setContentText("Deseja remover a tarefa \"" + selecionada.getTitulo() + "\"?");
+
+        Optional<ButtonType> resposta = confirmacao.showAndWait();
+
+        if (resposta.isPresent() && resposta.get() == ButtonType.OK) {
+            try {
+                int numero = listaTarefas.getSelectionModel().getSelectedIndex() + 1;
+                agenda.remover(dataSelecionada, numero);
+                aoClicarDia(dataSelecionada);
+            } catch (RepositorioException e) {
+                mostrarErro("Erro de acesso ao banco de dados. Verifique se o banco está em execução.");
+            }
+        }
+    }
+
+    @FXML
+    private void aoEditar() {
+        Tarefa selecionada = listaTarefas.getSelectionModel().getSelectedItem();
+
+        if (selecionada == null) {
+            mostrarErro("Selecione uma tarefa na lista.");
+            return;
+        }
+
+        try {
+            FXMLLoader carregador = new FXMLLoader(
+                    getClass().getResource("/br/com/kevmartins/agendapostit/tela-formulario.fxml")
+            );
+            Parent raiz = carregador.load();
+
+            TelaFormularioController controllerForm = carregador.getController();
+            controllerForm.setAgenda(agenda);
+            controllerForm.carregarParaEdicao(selecionada);
+
+            Stage janelaForm = new Stage();
+            janelaForm.setTitle("Editar tarefa");
             janelaForm.setScene(new Scene(raiz));
             janelaForm.initModality(Modality.APPLICATION_MODAL);
             janelaForm.showAndWait();

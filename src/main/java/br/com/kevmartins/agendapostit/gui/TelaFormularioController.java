@@ -33,6 +33,7 @@ public class TelaFormularioController {
 
     private Agenda agenda;
     private boolean salvou = false;
+    private Tarefa tarefaEmEdicao = null;
 
     private final DateTimeFormatter formatadorHora = DateTimeFormatter.ofPattern("HH:mm");
 
@@ -42,6 +43,14 @@ public class TelaFormularioController {
 
     public boolean isSalvou() {
         return salvou;
+    }
+
+    public void carregarParaEdicao(Tarefa tarefa) {
+        this.tarefaEmEdicao = tarefa;
+        campoTitulo.setText(tarefa.getTitulo());
+        campoData.setValue(tarefa.getData());
+        campoHorario.setText(tarefa.getHorario().format(formatadorHora));
+        campoDescricao.setText(tarefa.getDescricao());
     }
 
     @FXML
@@ -65,8 +74,16 @@ public class TelaFormularioController {
         }
 
         try {
-            Tarefa tarefa = new Tarefa(titulo, data, horario, descricao);
-            agenda.adicionar(tarefa);
+            if (tarefaEmEdicao == null) {
+                Tarefa tarefa = new Tarefa(titulo, data, horario, descricao);
+                agenda.adicionar(tarefa);
+            } else {
+                tarefaEmEdicao.setTitulo(titulo);
+                tarefaEmEdicao.setData(data);
+                tarefaEmEdicao.setHorario(horario);
+                tarefaEmEdicao.setDescricao(descricao);
+                agenda.atualizar(tarefaEmEdicao);
+            }
             salvou = true;
             fecharJanela();
         } catch (TituloInvalidoException | DataNoPassadoException e) {
