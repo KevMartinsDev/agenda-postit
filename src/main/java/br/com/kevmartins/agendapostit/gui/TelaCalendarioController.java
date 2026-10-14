@@ -1,16 +1,19 @@
 package br.com.kevmartins.agendapostit.gui;
 
+import br.com.kevmartins.agendapostit.dominio.Agenda;
+import br.com.kevmartins.agendapostit.dominio.DiaSemTarefasException;
 import br.com.kevmartins.agendapostit.dominio.Tarefa;
+import br.com.kevmartins.agendapostit.persistencia.RepositorioException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
@@ -32,6 +35,7 @@ public class TelaCalendarioController {
     private ListView<Tarefa> listaTarefas;
 
     private YearMonth mesAtual;
+    private Agenda agenda;
 
     private final DateTimeFormatter formatadorData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
@@ -39,6 +43,10 @@ public class TelaCalendarioController {
     private void initialize() {
         mesAtual = YearMonth.now();
         desenharCalendario();
+    }
+
+    public void setAgenda(Agenda agenda) {
+        this.agenda = agenda;
     }
 
     private void desenharCalendario() {
@@ -90,15 +98,23 @@ public class TelaCalendarioController {
     private void aoClicarDia(LocalDate data) {
         rotuloDiaSelecionado.setText("Tarefas de " + data.format(formatadorData));
 
-        List<Tarefa> tarefasDoDia = buscarTarefasFicticias(data);
-        ObservableList<Tarefa> itens = FXCollections.observableArrayList(tarefasDoDia);
-        listaTarefas.setItems(itens);
+        try {
+            List<Tarefa> tarefasDoDia = agenda.listarPorDia(data);
+            ObservableList<Tarefa> itens = FXCollections.observableArrayList(tarefasDoDia);
+            listaTarefas.setItems(itens);
+        } catch (DiaSemTarefasException e) {
+            listaTarefas.setItems(FXCollections.observableArrayList());
+        } catch (RepositorioException e) {
+            mostrarErro("Erro de acesso ao banco de dados. Verifique se o banco está em execução.");
+        }
     }
 
-    private List<Tarefa> buscarTarefasFicticias(LocalDate data) {
-        Tarefa t1 = new Tarefa("Reunião de equipe", data, LocalTime.of(10, 0));
-        Tarefa t2 = new Tarefa("Revisar relatório", data, LocalTime.of(15, 0), "Trimestre fechado");
-        return List.of(t1, t2);
+    private void mostrarErro(String mensagem) {
+        Alert alerta = new Alert(Alert.AlertType.ERROR);
+        alerta.setTitle("Erro");
+        alerta.setHeaderText(null);
+        alerta.setContentText(mensagem);
+        alerta.showAndWait();
     }
 
     @FXML
