@@ -22,6 +22,12 @@ import java.io.IOException;
 import javafx.scene.control.ButtonType;
 import java.util.Optional;
 import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.RowConstraints;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -63,6 +69,15 @@ public class TelaCalendarioController {
     @FXML
     private Button botaoRemover;
 
+    @FXML
+    private VBox painelVazio;
+
+    @FXML
+    private VBox painelDireito;
+
+    @FXML
+    private ImageView ilustracao;
+
     private YearMonth mesAtual;
     private Agenda agenda;
     private LocalDate dataSelecionada;
@@ -72,6 +87,9 @@ public class TelaCalendarioController {
     @FXML
     private void initialize() {
         mesAtual = YearMonth.now();
+        configurarColunas();
+        configurarLinhas();
+        configurarResponsividade();
         desenharCalendario();
 
         botaoMesAnterior.setGraphic(Icones.criar(Icones.CHEVRON_LEFT, Color.web("#e0e0e0"), 16));
@@ -80,6 +98,48 @@ public class TelaCalendarioController {
         botaoConcluir.setGraphic(Icones.criar(Icones.CHECK, Color.WHITE, 16));
         botaoEditar.setGraphic(Icones.criar(Icones.EDIT, Color.WHITE, 16));
         botaoRemover.setGraphic(Icones.criar(Icones.TRASH, Color.WHITE, 16));
+
+        Image imagem = new Image(getClass().getResourceAsStream("/br/com/kevmartins/agendapostit/imagens/post-its.png"));
+        ilustracao.setImage(imagem);
+
+        mostrarEstadoVazio();
+    }
+
+    private void configurarResponsividade() {
+        gradeDias.sceneProperty().addListener((obs, cenaAntiga, cenaNova) -> {
+            if (cenaNova != null) {
+                cenaNova.widthProperty().addListener((o, larguraAntiga, larguraNova) -> {
+                    aplicarLayout(larguraNova.doubleValue());
+                });
+                aplicarLayout(cenaNova.getWidth());
+            }
+        });
+    }
+
+    private void aplicarLayout(double largura) {
+        boolean compacto = largura < 1000;
+
+        if (compacto) {
+            painelDireito.setPrefWidth(300);
+            painelDireito.setMaxWidth(300);
+        } else {
+            painelDireito.setPrefWidth(460);
+            painelDireito.setMaxWidth(460);
+        }
+    }
+
+    private void mostrarEstadoVazio() {
+        painelVazio.setVisible(true);
+        painelVazio.setManaged(true);
+        listaTarefas.setVisible(false);
+        listaTarefas.setManaged(false);
+    }
+
+    private void mostrarLista() {
+        painelVazio.setVisible(false);
+        painelVazio.setManaged(false);
+        listaTarefas.setVisible(true);
+        listaTarefas.setManaged(true);
     }
 
     public void setAgenda(Agenda agenda) {
@@ -87,7 +147,29 @@ public class TelaCalendarioController {
         desenharCalendario();
     }
 
+    private void configurarColunas() {
+        gradeDias.getColumnConstraints().clear();
+        for (int i = 0; i < 7; i++) {
+            ColumnConstraints coluna = new ColumnConstraints();
+            coluna.setPercentWidth(100.0 / 7);
+            coluna.setHgrow(Priority.ALWAYS);
+            gradeDias.getColumnConstraints().add(coluna);
+        }
+    }
+
+    private void configurarLinhas() {
+        gradeDias.getRowConstraints().clear();
+        RowConstraints cabecalho = new RowConstraints();
+        gradeDias.getRowConstraints().add(cabecalho);
+        for (int i = 0; i < 6; i++) {
+            RowConstraints linha = new RowConstraints();
+            linha.setVgrow(Priority.ALWAYS);
+            gradeDias.getRowConstraints().add(linha);
+        }
+    }
+
     private void desenharCalendario() {
+
         gradeDias.getChildren().clear();
         atualizarRotulo();
         desenharCabecalhoDias();
@@ -124,7 +206,12 @@ public class TelaCalendarioController {
             LocalDate dataDoDia = mesAtual.atDay(dia);
 
             Button botaoDia = new Button(String.valueOf(dia));
-            botaoDia.setPrefSize(60, 50);
+            botaoDia.setMaxWidth(Double.MAX_VALUE);
+            botaoDia.setMaxHeight(Double.MAX_VALUE);
+            botaoDia.setPrefHeight(70);
+            botaoDia.setMinHeight(50);
+            GridPane.setHgrow(botaoDia, Priority.ALWAYS);
+            GridPane.setVgrow(botaoDia, Priority.ALWAYS);
             botaoDia.setOnAction(evento -> aoClicarDia(dataDoDia));
             botaoDia.getStyleClass().add("dia-calendario");
 
@@ -154,8 +241,9 @@ public class TelaCalendarioController {
             List<Tarefa> tarefasDoDia = agenda.listarPorDia(data);
             ObservableList<Tarefa> itens = FXCollections.observableArrayList(tarefasDoDia);
             listaTarefas.setItems(itens);
+            mostrarLista();
         } catch (DiaSemTarefasException e) {
-            listaTarefas.setItems(FXCollections.observableArrayList());
+            mostrarEstadoVazio();
         } catch (RepositorioException e) {
             mostrarErro("Erro de acesso ao banco de dados. Verifique se o banco está em execução.");
         }

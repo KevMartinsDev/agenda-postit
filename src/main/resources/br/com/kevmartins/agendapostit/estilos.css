@@ -104,3 +104,31 @@
 .botao-remover:hover {
     -fx-background-color: #f14c49;
 }
+
+.texto-vazio {
+    -fx-text-fill: #9090a0;
+    -fx-font-size: 13px;
+}
+
+.painel-direito {
+    -fx-background-color: #28283a;
+    -fx-background-radius: 12px;
+    -fx-border-color: #3a3a4e;
+    -fx-border-radius: 12px;
+    -fx-border-width: 1px;
+    -fx-padding: 16px;
+}
+
+.botao-concluir, .botao-editar, .botao-remover {
+    -fx-min-width: 90px;
+    -fx-alignment: CENTER;
+}
+
+.botao-novo, .botao-concluir, .botao-editar, .botao-remover {
+    -fx-min-height: 42px;
+    -fx-pref-height: 42px;
+}
+
+.barra-acoes {
+    -fx-padding: 4px 0 0 0;
+}
