@@ -34,6 +34,9 @@ public class AppGrafica extends Application {
         controller.setAgenda(agenda);
 
         Scene cena = new Scene(raiz, 800, 480);
+        cena.getStylesheets().add(
+                getClass().getResource("/br/com/kevmartins/agendapostit/estilos.css").toExternalForm()
+        );
         palco.setTitle("Agenda Post-it");
         palco.setScene(cena);
         palco.show();

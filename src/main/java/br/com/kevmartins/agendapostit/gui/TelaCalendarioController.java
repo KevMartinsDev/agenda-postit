@@ -100,9 +100,14 @@ public class TelaCalendarioController {
             Button botaoDia = new Button(String.valueOf(dia));
             botaoDia.setPrefSize(60, 50);
             botaoDia.setOnAction(evento -> aoClicarDia(dataDoDia));
+            botaoDia.getStyleClass().add("dia-calendario");
 
             if (diasComTarefa.contains(dataDoDia)) {
-                botaoDia.setStyle("-fx-background-color: #b3d9ff;");
+                botaoDia.getStyleClass().add("dia-com-tarefa");
+            }
+
+            if (dataDoDia.equals(LocalDate.now())) {
+                botaoDia.getStyleClass().add("dia-hoje");
             }
 
             gradeDias.add(botaoDia, coluna, linha);

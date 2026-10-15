@@ -1,0 +1,68 @@
+.root {
+    -fx-background-color: #1e1e2e;
+    -fx-font-family: "Segoe UI", sans-serif;
+}
+
+.label {
+    -fx-text-fill: #e0e0e0;
+}
+
+#rotuloMes {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+}
+
+#rotuloDiaSelecionado {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+}
+
+.button {
+    -fx-background-color: #313244;
+    -fx-text-fill: #e0e0e0;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #45475a;
+}
+
+.dia-calendario {
+    -fx-background-color: #313244;
+    -fx-text-fill: #e0e0e0;
+    -fx-background-radius: 8px;
+    -fx-font-size: 14px;
+}
+
+.dia-calendario:hover {
+    -fx-background-color: #45475a;
+}
+
+.dia-com-tarefa {
+    -fx-background-color: #3a4a6b;
+}
+
+.dia-hoje {
+    -fx-background-color: #4a9eff;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+}
+
+.list-view {
+    -fx-background-color: #28283a;
+    -fx-background-radius: 8px;
+}
+
+.list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #e0e0e0;
+    -fx-padding: 8px;
+}
+
+.list-cell:filled:selected {
+    -fx-background-color: #4a9eff;
+    -fx-text-fill: #ffffff;
+}
