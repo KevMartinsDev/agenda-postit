@@ -18,21 +18,21 @@
 
     <VBox spacing="12.0">
         <HBox spacing="12.0" alignment="CENTER">
-            <Button text="&lt;" onAction="#mesAnterior"/>
+            <Button fx:id="botaoMesAnterior" onAction="#mesAnterior"/>
             <Label fx:id="rotuloMes" text="Mês"/>
-            <Button text="&gt;" onAction="#mesSeguinte"/>
+            <Button fx:id="botaoMesSeguinte" onAction="#mesSeguinte"/>
         </HBox>
         <GridPane fx:id="gradeDias" hgap="4.0" vgap="4.0"/>
-        <Button text="Nova tarefa" onAction="#aoClicarNovaTarefa" styleClass="botao-novo"/>
+        <Button fx:id="botaoNovaTarefa" text="Nova tarefa" onAction="#aoClicarNovaTarefa" styleClass="botao-novo"/>
     </VBox>
 
     <VBox spacing="12.0" prefWidth="260.0">
         <Label fx:id="rotuloDiaSelecionado" text="Selecione um dia"/>
         <ListView fx:id="listaTarefas"/>
         <HBox spacing="8.0">
-            <Button text="Concluir" onAction="#aoConcluir" styleClass="botao-concluir"/>
-            <Button text="Editar" onAction="#aoEditar" styleClass="botao-editar"/>
-            <Button text="Remover" onAction="#aoRemover" styleClass="botao-remover"/>
+            <Button fx:id="botaoConcluir" text="Concluir" onAction="#aoConcluir" styleClass="botao-concluir"/>
+            <Button fx:id="botaoEditar" text="Editar" onAction="#aoEditar" styleClass="botao-editar"/>
+            <Button fx:id="botaoRemover" text="Remover" onAction="#aoRemover" styleClass="botao-remover"/>
         </HBox>
     </VBox>
 

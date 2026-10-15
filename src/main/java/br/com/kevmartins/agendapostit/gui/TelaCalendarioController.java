@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import javafx.scene.control.ButtonType;
 import java.util.Optional;
+import javafx.scene.paint.Color;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -44,6 +45,24 @@ public class TelaCalendarioController {
     @FXML
     private ListView<Tarefa> listaTarefas;
 
+    @FXML
+    private Button botaoMesAnterior;
+
+    @FXML
+    private Button botaoMesSeguinte;
+
+    @FXML
+    private Button botaoNovaTarefa;
+
+    @FXML
+    private Button botaoConcluir;
+
+    @FXML
+    private Button botaoEditar;
+
+    @FXML
+    private Button botaoRemover;
+
     private YearMonth mesAtual;
     private Agenda agenda;
     private LocalDate dataSelecionada;
@@ -54,6 +73,13 @@ public class TelaCalendarioController {
     private void initialize() {
         mesAtual = YearMonth.now();
         desenharCalendario();
+
+        botaoMesAnterior.setGraphic(Icones.criar(Icones.CHEVRON_LEFT, Color.web("#e0e0e0"), 16));
+        botaoMesSeguinte.setGraphic(Icones.criar(Icones.CHEVRON_RIGHT, Color.web("#e0e0e0"), 16));
+        botaoNovaTarefa.setGraphic(Icones.criar(Icones.PLUS, Color.WHITE, 16));
+        botaoConcluir.setGraphic(Icones.criar(Icones.CHECK, Color.WHITE, 16));
+        botaoEditar.setGraphic(Icones.criar(Icones.EDIT, Color.WHITE, 16));
+        botaoRemover.setGraphic(Icones.criar(Icones.TRASH, Color.WHITE, 16));
     }
 
     public void setAgenda(Agenda agenda) {
