@@ -23,16 +23,16 @@
             <Button text="&gt;" onAction="#mesSeguinte"/>
         </HBox>
         <GridPane fx:id="gradeDias" hgap="4.0" vgap="4.0"/>
-        <Button text="Nova tarefa" onAction="#aoClicarNovaTarefa"/>
+        <Button text="Nova tarefa" onAction="#aoClicarNovaTarefa" styleClass="botao-novo"/>
     </VBox>
 
     <VBox spacing="12.0" prefWidth="260.0">
         <Label fx:id="rotuloDiaSelecionado" text="Selecione um dia"/>
         <ListView fx:id="listaTarefas"/>
         <HBox spacing="8.0">
-            <Button text="Concluir" onAction="#aoConcluir"/>
-            <Button text="Editar" onAction="#aoEditar"/>
-            <Button text="Remover" onAction="#aoRemover"/>
+            <Button text="Concluir" onAction="#aoConcluir" styleClass="botao-concluir"/>
+            <Button text="Editar" onAction="#aoEditar" styleClass="botao-editar"/>
+            <Button text="Remover" onAction="#aoRemover" styleClass="botao-remover"/>
         </HBox>
     </VBox>
 

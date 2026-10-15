@@ -66,3 +66,41 @@
     -fx-background-color: #4a9eff;
     -fx-text-fill: #ffffff;
 }
+
+.botao-novo {
+    -fx-background-color: #4a9eff;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 18px;
+}
+
+.botao-novo:hover {
+    -fx-background-color: #6bb0ff;
+}
+
+.botao-concluir {
+    -fx-background-color: #2ea043;
+    -fx-text-fill: #ffffff;
+}
+
+.botao-concluir:hover {
+    -fx-background-color: #3fb954;
+}
+
+.botao-editar {
+    -fx-background-color: #8957e5;
+    -fx-text-fill: #ffffff;
+}
+
+.botao-editar:hover {
+    -fx-background-color: #9d6ff0;
+}
+
+.botao-remover {
+    -fx-background-color: #da3633;
+    -fx-text-fill: #ffffff;
+}
+
+.botao-remover:hover {
+    -fx-background-color: #f14c49;
+}
