@@ -177,7 +177,7 @@ public class TelaCalendarioController {
     }
 
     private void atualizarRotulo() {
-        String nomeMes = mesAtual.getMonth().getDisplayName(TextStyle.FULL, new Locale("pt", "BR"));
+        String nomeMes = mesAtual.getMonth().getDisplayName(TextStyle.FULL, Locale.of("pt", "BR"));
         nomeMes = nomeMes.substring(0, 1).toUpperCase() + nomeMes.substring(1);
         rotuloMes.setText(nomeMes + " " + mesAtual.getYear());
     }
