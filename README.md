@@ -1,43 +1,38 @@
 # Agenda Post-it
 
-Um gerenciador de tarefas pra linha de comando, no estilo dos post-its que a gente cola na mesa. Dá pra adicionar tarefas com data e horário, listar as do dia, editar, marcar como concluídas e remover. A partir da v0.2, as tarefas ficam salvas num banco de dados, então elas continuam lá mesmo depois de fechar o programa.
+Um gerenciador de tarefas no estilo dos post-its que a gente cola na mesa. A partir da v0.3, tem interface gráfica: um calendário onde você vê e gerencia suas tarefas por dia — adicionar, listar, editar, marcar como concluídas e remover. As tarefas ficam salvas num banco de dados, então continuam lá mesmo depois de fechar o programa.
 
-É um projeto de estudo em Java. Fui construindo com foco em orientação a objetos, regras de negócio bem definidas, persistência em banco e testes automatizados.
+É um projeto de estudo em Java. Fui construindo em versões, com foco em orientação a objetos, regras de negócio bem definidas, persistência em banco, testes automatizados e, na v0.3, interface gráfica.
 
 ## Versão atual
 
-A v0.2 roda no console e salva as tarefas num PostgreSQL. A ideia é, mais pra frente, ter uma interface gráfica.
+A v0.3 tem interface gráfica (JavaFX), com um calendário como tela principal. As tarefas são salvas num PostgreSQL. A versão de console (anterior) continua disponível no código.
 
 ## O que dá pra fazer
 
-- Adicionar uma tarefa com título, data, horário e uma descrição opcional
-- Listar as tarefas de um dia, já ordenadas por horário
-- Editar o título, a descrição ou a data e horário de uma tarefa
-- Marcar uma tarefa como concluída
-- Remover uma tarefa
+- Ver um calendário mensal, navegando entre os meses
+- Clicar num dia para ver as tarefas dele
+- Os dias que têm tarefa aparecem destacados no calendário
+- Adicionar uma tarefa com título, data, horário e descrição opcional
+- Editar, marcar como concluída e remover tarefas
 - As tarefas ficam salvas no banco e não se perdem ao fechar o programa
 
-Editar, concluir e remover pedem uma confirmação antes, e dá pra cancelar. Na hora de criar uma tarefa, o programa não deixa:
-
-- Título vazio ou só com espaços
-- Data e horário no passado
-- Data ou horário digitados num formato errado (aí ele pede de novo)
-
-Uma tarefa que já existe pode ser editada mesmo que o horário dela já tenha passado — afinal, uma pendência atrasada ainda é uma tarefa válida.
+As operações de editar, concluir e remover pedem confirmação. As validações garantem que nenhuma tarefa seja criada em estado inválido (título vazio ou data/horário no passado). Uma tarefa que já existe pode ser editada mesmo que o horário já tenha passado.
 
 ## Tecnologias
 
 - Java 21
+- JavaFX (interface gráfica)
 - Maven
-- PostgreSQL 16 (rodando em Docker)
+- PostgreSQL 16 (em Docker)
 - JDBC
-- JUnit 5, Mockito e Testcontainers pros testes
+- JUnit 5, Mockito e Testcontainers (testes)
 
 ## O que você precisa ter instalado
 
 - Java 21
 - Maven
-- Docker (pra subir o banco e pra rodar os testes de integração)
+- Docker (para o banco de dados e para os testes de integração)
 
 ## Configuração
 
@@ -54,7 +49,7 @@ POSTGRES_PASSWORD=sua_senha
 
 ## Como rodar
 
-Você precisa ter o Java 21, o Maven e o Docker instalados, com o Docker rodando.
+Você precisa ter Java 21, Maven e Docker instalados, com o Docker rodando.
 
 Clone o repositório:
 
@@ -69,20 +64,19 @@ Suba o banco de dados:
 docker compose up -d
 ```
 
+Rode a interface gráfica:
+
+```
+mvn javafx:run
+```
+
 Rode os testes (precisa do Docker no ar):
 
 ```
 mvn test
 ```
 
-Rode o programa:
-
-```
-mvn compile
-mvn exec:java -Dexec.mainClass="br.com.kevmartins.agendapostit.Main"
-```
-
-Se preferir, dá pra abrir o projeto no IntelliJ e rodar a classe `Main` direto por lá.
+Se preferir usar a versão de console, dá pra rodar a classe `Main` em vez da interface gráfica.
 
 Quando terminar, pra parar o banco:
 
@@ -92,58 +86,26 @@ docker compose stop
 
 ## Como o projeto está organizado
 
-Dividi o código em três camadas, cada uma cuidando de uma coisa:
+O código é separado em camadas, cada uma cuidando de uma coisa:
 
-- **MenuConsole**: fala com o usuário. Não sabe nada sobre banco.
-- **Tarefa e Agenda**: as regras de negócio. Dependem de um contrato de persistência, não do banco em si.
-- **TarefaRepository e TarefaRepositoryJdbc**: a parte que acessa o banco, via JDBC.
+- **Domínio** (`Tarefa`, `Agenda`): as regras de negócio. Não sabem nada sobre banco nem sobre interface.
+- **Persistência** (`TarefaRepository` e `TarefaRepositoryJdbc`): o acesso ao banco, via JDBC.
+- **Interface gráfica** (`AppGrafica` e os controllers em `gui/`): as telas em JavaFX, que conversam com a Agenda.
+- **Console** (`Main`, `MenuConsole`): a interface de texto da versão anterior, que continua funcionando sobre o mesmo domínio.
 
-As camadas se conectam por injeção de dependência: cada uma recebe o que precisa pelo construtor, e é a classe `Main` que monta tudo. Como o domínio depende só da interface `TarefaRepository`, e não da implementação, dá pra trocar o banco por outra coisa sem mexer nas regras de negócio nem na tela.
+As camadas se conectam por injeção de dependência. Como o domínio depende de contratos (a interface `TarefaRepository`), e não de implementações, dá pra ter duas interfaces diferentes (gráfica e console) e trocar a tecnologia de persistência sem mexer nas regras de negócio.
 
-Os detalhes da modelagem estão em `docs/modelagem-v0.2.md`.
-
-Estrutura das pastas:
-
-```
-src/
-  main/java/br/com/kevmartins/agendapostit/
-    Main.java                     ponto de entrada, monta as peças
-    dominio/                      regras de negócio
-      Tarefa.java
-      Agenda.java
-      DataNoPassadoException.java
-      DiaSemTarefasException.java
-      NumeroListaInexistenteException.java
-      TituloInvalidoException.java
-    menu/                         interface de console
-      MenuConsole.java
-    persistencia/                 acesso ao banco
-      ConexaoBanco.java
-      RepositorioException.java
-      TarefaRepository.java
-      TarefaRepositoryJdbc.java
-  test/java/br/com/kevmartins/agendapostit/
-    dominio/
-      AgendaTest.java
-      TarefaTest.java
-    persistencia/
-      TarefaRepositoryJdbcTest.java
-docs/                             documentação
-  requisitos.md
-  requisitos-v0.2.md
-  casos-de-uso.md
-  modelagem.md
-  modelagem-v0.2.md
-docker-compose.yml                sobe o PostgreSQL
-.env.example                      modelo das variaveis de ambiente
-```
+Os detalhes de cada versão estão em `docs/` (requisitos e modelagem de cada uma).
 
 ## Testes
 
-- **Tarefa**: testes simples, só do domínio.
+- **Domínio** (`Tarefa`): testes puros, sem dependências externas.
 - **Agenda**: testada com Mockito, usando um repositório falso pra checar as regras sem tocar no banco.
 - **TarefaRepositoryJdbc**: testado com Testcontainers, que sobe um PostgreSQL descartável e limpo a cada rodada (por isso precisa do Docker).
 
-## Ainda não tem
+A interface gráfica é validada por teste manual.
 
-- Interface gráfica — por enquanto é só console. É o próximo grande passo.
+## Próximos passos
+
+- Post-its flutuantes que aparecem perto do horário da tarefa (v0.4)
+- Comando por voz e linguagem natural, em versões futuras
