@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.scene.image.Image;
 
 import java.io.IOException;
 
@@ -37,6 +38,10 @@ public class AppGrafica extends Application {
         cena.getStylesheets().add(
                 getClass().getResource("/br/com/kevmartins/agendapostit/estilos.css").toExternalForm()
         );
+
+        palco.getIcons().add(new Image(getClass().getResourceAsStream(
+                "/br/com/kevmartins/agendapostit/imagens/app-icon.png")));
+
         palco.setTitle("Agenda Post-it");
         palco.setScene(cena);
         palco.show();
