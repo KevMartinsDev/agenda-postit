@@ -286,8 +286,11 @@ public class TelaCalendarioController {
             janelaForm.initModality(Modality.APPLICATION_MODAL);
             janelaForm.showAndWait();
 
-            if (controllerForm.isSalvou() && dataSelecionada != null) {
-                aoClicarDia(dataSelecionada);
+            if (controllerForm.isSalvou()) {
+                desenharCalendario();
+                if (dataSelecionada != null) {
+                    aoClicarDia(dataSelecionada);
+                }
             }
         } catch (IOException e) {
             mostrarErro("Não foi possível abrir o formulário.");
@@ -306,6 +309,7 @@ public class TelaCalendarioController {
         try {
             int numero = listaTarefas.getSelectionModel().getSelectedIndex() + 1;
             agenda.concluir(dataSelecionada, numero);
+            desenharCalendario();
             aoClicarDia(dataSelecionada);
         } catch (RepositorioException e) {
             mostrarErro("Erro de acesso ao banco de dados. Verifique se o banco está em execução.");
@@ -332,6 +336,7 @@ public class TelaCalendarioController {
             try {
                 int numero = listaTarefas.getSelectionModel().getSelectedIndex() + 1;
                 agenda.remover(dataSelecionada, numero);
+                desenharCalendario();
                 aoClicarDia(dataSelecionada);
             } catch (RepositorioException e) {
                 mostrarErro("Erro de acesso ao banco de dados. Verifique se o banco está em execução.");
@@ -364,8 +369,11 @@ public class TelaCalendarioController {
             janelaForm.initModality(Modality.APPLICATION_MODAL);
             janelaForm.showAndWait();
 
-            if (controllerForm.isSalvou() && dataSelecionada != null) {
-                aoClicarDia(dataSelecionada);
+            if (controllerForm.isSalvou()) {
+                desenharCalendario();
+                if (dataSelecionada != null) {
+                    aoClicarDia(dataSelecionada);
+                }
             }
         } catch (IOException e) {
             mostrarErro("Não foi possível abrir o formulário.");
