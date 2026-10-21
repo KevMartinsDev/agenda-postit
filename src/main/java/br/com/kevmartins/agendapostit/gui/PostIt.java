@@ -11,6 +11,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.geometry.Rectangle2D;
+import javafx.stage.Screen;
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
 
 import java.time.format.DateTimeFormatter;
 
@@ -62,10 +66,23 @@ public class PostIt {
         );
 
         janela.setScene(cena);
+
+        PauseTransition autoFechar = new PauseTransition(Duration.seconds(10));
+        autoFechar.setOnFinished(e -> janela.close());
+        janela.setOnShown(e -> autoFechar.play());
+    }
+
+    private void posicionarCantoInferiorDireito() {
+        Rectangle2D tela = Screen.getPrimary().getVisualBounds();
+        double margem = 20;
+
+        janela.setX(tela.getMaxX() - 280 - margem);
+        janela.setY(tela.getMaxY() - 150 - margem);
     }
 
     public void exibir() {
         janela.show();
+        posicionarCantoInferiorDireito();
     }
 
     public Stage getJanela() {
