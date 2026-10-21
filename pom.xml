@@ -72,7 +72,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>br.com.kevmartins.agendapostit.AppGrafica</mainClass>
+                    <mainClass>br.com.kevmartins.agendapostit.TestePostIt</mainClass>
                 </configuration>
             </plugin>
         </plugins>
