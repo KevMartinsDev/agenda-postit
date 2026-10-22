@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
+import br.com.kevmartins.agendapostit.gui.VigiaLembretes;
 
 import java.io.IOException;
 
@@ -22,6 +23,10 @@ public class AppGrafica extends Application {
         String url = "jdbc:postgresql://localhost:5432/agenda";
         String usuario = dotenv.get("POSTGRES_USER");
         String senha = dotenv.get("POSTGRES_PASSWORD");
+        VigiaLembretes vigia = new VigiaLembretes();
+        vigia.iniciar();
+
+        palco.setOnCloseRequest(e -> vigia.parar());
 
         TarefaRepository repositorio = new TarefaRepositoryJdbc(url, usuario, senha);
         Agenda agenda = new Agenda(repositorio);
