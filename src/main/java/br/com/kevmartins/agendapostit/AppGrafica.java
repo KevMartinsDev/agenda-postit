@@ -23,13 +23,13 @@ public class AppGrafica extends Application {
         String url = "jdbc:postgresql://localhost:5432/agenda";
         String usuario = dotenv.get("POSTGRES_USER");
         String senha = dotenv.get("POSTGRES_PASSWORD");
-        VigiaLembretes vigia = new VigiaLembretes();
+        TarefaRepository repositorio = new TarefaRepositoryJdbc(url, usuario, senha);
+        Agenda agenda = new Agenda(repositorio);
+
+        VigiaLembretes vigia = new VigiaLembretes(agenda);
         vigia.iniciar();
 
         palco.setOnCloseRequest(e -> vigia.parar());
-
-        TarefaRepository repositorio = new TarefaRepositoryJdbc(url, usuario, senha);
-        Agenda agenda = new Agenda(repositorio);
 
         FXMLLoader carregador = new FXMLLoader(
                 getClass().getResource("/br/com/kevmartins/agendapostit/tela-calendario.fxml")
